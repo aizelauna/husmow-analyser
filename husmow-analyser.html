@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Husmow analyser</title>
+  <meta charset="utf-8" />
+  <link
+  rel="stylesheet"
+  href="http://cdn.leafletjs.com/leaflet-0.7/leaflet.css"
+  />
+</head>
+<body>
+  <div id="map" style="width: 800px; height: 640px"></div>
+
+  <script
+  src="http://cdn.leafletjs.com/leaflet-0.7/leaflet.js">
+  </script>
+  <script
+  src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.6.3/papaparse.min.js">
+  </script>
+
+  <script>
+  var map = L.map('map').setView([43.373875,1.7410333333333334], 19);
+  mapLink = '<a href="http://www.esri.com/">Esri</a>';
+  wholink = 'i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community';
+  L.tileLayer(
+    'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      attribution: '&copy; '+mapLink+', '+wholink,
+      minZoom: 19,
+      maxZoom: 19,
+    }).addTo(map);
+
+  var latlngs = [
+    [43.37387666666667,1.7412299999999998],
+    [43.37378,1.7414049999999999],
+    [43.373936666666665,1.7414749999999999],
+    [43.373961666666666,1.7413483333333333],
+    [43.37412,1.741245],
+    [43.37399666666666,1.741235],
+    [43.374015,1.7410516666666667],
+    [43.37401666666667,1.7411483333333333],
+    [43.373905,1.7414183333333333],
+    [43.373893333333335,1.7415133333333332],
+    [43.37390666666667,1.741365],
+    [43.373891666666665,1.7410416666666666],
+    [43.37391,1.740985],
+    [43.373981666666666,1.7409949999999998],
+    [43.373963333333336,1.7409916666666665],
+    [43.373891666666665,1.7409066666666666],
+    [43.37403166666667,1.7410683333333332],
+    [43.37409666666667,1.7412283333333334],
+    [43.373976666666664,1.7410549999999998],
+    [43.37403166666667,1.7412666666666667],
+    [43.37398,1.741325],
+    [43.373911666666665,1.74138],
+    [43.373758333333335,1.7413933333333333],
+    [43.37379333333333,1.7414383333333334],
+    [43.373938333333335,1.7414083333333332],
+    [43.37386166666667,1.7411366666666668],
+    [43.37401333333333,1.7410233333333331],
+  ];
+  var polyline = L.polyline(latlngs, {color: 'red', weight: '2', dashArray: '4'}).addTo(map);
+
+  function get_list() {
+    // read text from URL location
+    var request = new XMLHttpRequest();
+    request.open('GET', 'husmow.list', true);
+    request.send(null);
+    request.onreadystatechange = function () {
+      if (request.readyState === 4 && request.status === 200) {
+        var type = request.getResponseHeader('Content-Type');
+          return request.responseText;
+      }
+    }
+  }
+  console.log(get_list())
+
+  Papa.parse("husmow-2019-03-20.log", {
+    download: true,
+    complete: function(results) {
+      console.log(results);
+    }
+  });
+
+  </script>
+</body>
+</html>
